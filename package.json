@@ -1,0 +1,21 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "http://3.34.49.62",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "aws-sdk": "^2.1030.0",
+    "amazon-cognito-identity-js": "^5.0.3",
+    "bootstrap": "^5.2.3",
+    "react-router-dom": "^6.0.0"  
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}

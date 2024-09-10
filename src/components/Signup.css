@@ -1,0 +1,70 @@
+/* 배경 이미지 설정 */
+.signup-background {
+    background-image: url('https://web-images-kmhyuk1018.s3.ap-northeast-2.amazonaws.com/background.jpg');
+    background-size: cover;  /* 이미지를 화면 크기에 맞춰 채움 */
+    background-position: center center;  /* 이미지 중앙 배치 */
+    background-repeat: no-repeat;  /* 이미지 반복 방지 */
+    height: 100vh;  /* 화면 전체 높이 설정 */
+    width: 100vw;   /* 화면 전체 너비 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 스크롤바 없이 화면에 꽉 차도록 설정 */
+}
+
+/* 회원가입 모달 */
+.signup-container {
+    width: 660px;
+    height: 750px;
+    background-color: rgba(42, 44, 48, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10; /* 모달이 항상 배경 위에 표시되도록 설정 */
+}
+
+.signup-container h2 {
+    text-align: center;
+    color: white;
+}
+
+.signup-container input {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+}
+
+.signup-container button {
+    display: block;
+    width: 90%;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #52565b;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signup-container button:hover {
+    background-color: #3b3f45;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}

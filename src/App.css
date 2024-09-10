@@ -1,0 +1,163 @@
+/* 기존 스타일 유지 */
+body {
+    background-color: #1c1e21;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+body::-webkit-scrollbar {
+    display: none; /* 웹킷 기반 브라우저에서 스크롤바를 숨김 */
+}
+
+main {
+    height: 200vh; /* 컨텐츠 높이를 늘려 위아래 스크롤이 가능하게 */
+}
+
+/* 로고 및 프로필 배너 스타일 */
+header {
+    text-align: center;
+    position: relative;
+}
+
+/* 로고 이미지 크기 조정 */
+.logo img {
+    width: 350px;
+    height: 100px;
+    object-fit: contain; /* 이미지 비율을 유지하면서 지정된 크기에 맞춤 */
+}
+
+.profile {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 18px; /* 로고보다 3단계 작게 */
+}
+
+/* 네비게이션 스타일 */
+.nav-links {
+    margin-top: 10px;
+}
+
+.nav-links ul {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+}
+
+.nav-links ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+}
+
+/* 상단 포스터 슬라이더 스타일 */
+.slider {
+    width: 100%;
+    height: 65vh; /* 슬라이더를 1.3배 더 크게 설정 */
+    overflow: hidden;
+    position: relative;
+}
+
+.slides {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지의 비율을 유지하면서 전체 이미지 표시 */
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    display: none; /* 슬라이드를 숨김 */
+}
+
+.slides.active {
+    opacity: 1;
+    display: block; /* 활성 슬라이드는 표시 */
+}
+
+/* 영화 카테고리 섹션 */
+.movie-section {
+    padding: 20px;
+}
+
+.movie-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* 하단 영화 그리드 */
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 반응형 그리드 */
+    justify-content: center; /* 중앙 정렬 추가 */
+    align-items: center; /* 중앙 정렬 추가 */
+    gap: 20px;
+}
+
+.movie-item img {
+    width: 450px;  /* 가로 500px 고정 */
+    height: 300px; /* 세로 400px 고정 */
+    border-radius: 10px;
+    transition: transform 0.2s;
+    object-fit: cover; /* 이미지를 포스터 영역에 맞추기 */
+}
+
+.movie-item img:hover {
+    transform: scale(1.05);
+}
+
+.movie-item p {
+    margin-top: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative;
+    width: 660px;
+    height: 750px;
+    background-color: #2a2c30;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content::-webkit-scrollbar {
+    display: none;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+}
+
+.modal-video iframe {
+    width: 100%;
+    height: 400px;
+}
+
+.modal-details {
+    margin-top: 20px;
+    color: white;
+    text-align: center;
+}
