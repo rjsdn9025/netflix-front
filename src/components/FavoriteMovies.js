@@ -13,7 +13,7 @@ function FavoriteMovies() {
         }
 
         // 백엔드 API로부터 찜한 영화 목록 가져오기 (JWT 토큰 포함)
-        fetch('${process.env.REACT_APP_BACKEND_URL}/api/movies/favorites', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/movies/favorites`, {
             headers: {
                 Authorization: `Bearer ${token}`,  // JWT 토큰을 Authorization 헤더에 추가
             }
