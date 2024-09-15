@@ -1,0 +1,110 @@
+/* 기존 스타일 */
+
+/* 모달 스타일 */
+.profile-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 660px;
+  height: 750px;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.profile-modal-content {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: #2a2c30;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+}
+
+.modal-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 150px;
+  background-color: #444;
+  padding: 20px;
+  border-right: 2px solid #fff;
+}
+
+.banner-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.banner-item:hover {
+  background-color: red;
+  color: white;
+}
+
+.profile-info {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: white;
+}
+
+.user-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2개의 열로 나눔 */
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.info-block {
+  background-color: #444;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+}
+
+/* 추가된 찜한 목록 스타일 */
+.favorite-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.favorite-poster {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  margin-right: 20px; /* 포스터와 영화 제목 간 간격 */
+}
+
+.favorite-title {
+  font-size: 18px;
+  color: white;
+}

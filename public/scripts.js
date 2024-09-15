@@ -1,19 +1,22 @@
 // 슬라이드 쇼 기능
 let slideIndex = 0;
 const slides = document.querySelectorAll(".slides");
-slides[0].classList.add("active");
 
-function showSlides() {
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].classList.remove("active");
+if (slides.length > 0) {
+    slides[0].classList.add("active");
+
+    function showSlides() {
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove("active");
+        }
+        slideIndex++;
+        if (slideIndex >= slides.length) { slideIndex = 0; }
+        slides[slideIndex].classList.add("active");
+        setTimeout(showSlides, 3000); // 3초마다 슬라이드 전환
     }
-    slideIndex++;
-    if (slideIndex >= slides.length) { slideIndex = 0; }
-    slides[slideIndex].classList.add("active");
-    setTimeout(showSlides, 3000); // 3초마다 슬라이드 전환
-}
 
-showSlides();
+    showSlides();
+}
 
 // 휠 스크롤로 페이지 이동
 window.addEventListener("wheel", function(event) {
@@ -21,7 +24,7 @@ window.addEventListener("wheel", function(event) {
     if (delta) {
         window.scrollBy({
             top: delta,
-            behavior: 'smooth'  // 부드러운 스크롤
+            behavior: 'auto'
         });
     }
 });
@@ -30,138 +33,95 @@ window.addEventListener("wheel", function(event) {
 document.addEventListener('DOMContentLoaded', () => {
     const movieModal = document.getElementById('movie-modal');
     const closeMovieBtn = document.querySelector('.close');
-    closeMovieBtn.addEventListener('click', closeMovieModal);
 
-    function closeMovieModal() {
-        movieModal.style.display = 'none';
-        document.getElementById('movie-trailer').src = '';
+    if (movieModal && closeMovieBtn) {
+        // 모달 닫기 버튼 클릭 시 모달 닫기
+        closeMovieBtn.addEventListener('click', () => {
+            movieModal.style.display = 'none';
+            const trailerElement = document.getElementById('movie-trailer');
+            if (trailerElement) trailerElement.src = ''; // 비디오 멈춤
+        });
+
+        // 모달 열기 이벤트 (예: 포스터 클릭 시)
+        const posterElements = document.querySelectorAll('.movie-item');
+        if (posterElements.length > 0) {
+            posterElements.forEach((poster) => {
+                poster.addEventListener('click', () => {
+                    movieModal.style.display = 'block';
+                    movieModal.style.position = 'fixed';
+                    movieModal.style.top = '50%';
+                    movieModal.style.left = '50%';
+                    movieModal.style.transform = 'translate(-50%, -50%)';
+                    movieModal.style.width = '660px';
+                    movieModal.style.height = '750px';
+                    movieModal.style.zIndex = '1000'; // 다른 요소들 위에 표시
+                    movieModal.style.backgroundColor = '#2a2c30'; // 모달 배경색
+                });
+            });
+        }
     }
 
     // 로그인 상태 확인 후 로그인 모달 표시
     const token = localStorage.getItem('token');
-    if (!token) {
-        document.getElementById('login-modal').style.display = 'block'; // 로그인 모달 표시
+    const loginModal = document.getElementById('login-modal');
+    
+    if (!token && loginModal) {
+        loginModal.style.display = 'block';
     } else {
-        fetchMovies(); // 로그인 상태면 영화 목록 로드
-        document.getElementById('login-modal').style.display = 'none'; // 로그인 모달 숨김
+        if (typeof fetchMovies === 'function') {
+            fetchMovies();
+        }
+        if (loginModal) {
+            loginModal.style.display = 'none';
+        }
     }
-
-    // 영화 데이터를 가져와서 페이지에 표시하는 함수
-    fetchMovies();
 
     // 로그인 처리
-    document.getElementById('login-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.token) {
-                localStorage.setItem('token', data.token);
-                document.getElementById('login-modal').style.display = 'none'; // 로그인 모달 닫기
-                fetchMovies(); // 영화 목록 불러오기
-            } else {
-                alert('로그인 실패');
-            }
-        });
-    });
-
-    // 회원가입 처리
-    document.getElementById('signup-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('signup-email').value;
-        const password = document.getElementById('signup-password').value;
-        const name = document.getElementById('signup-name').value;
-
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/signup`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, name })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.message === 'User signed up successfully') {
-                alert('회원가입이 완료되었습니다.');
-                document.getElementById('signup-modal').style.display = 'none';
-            } else {
-                alert('회원가입 실패');
-            }
-        });
-    });
-
-    // 로그아웃 처리
-    document.getElementById('logout-btn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        alert('로그아웃되었습니다.');
-        location.reload();
-    });
-
-    // 로그인 상태 확인 후 닉네임 출력
-    if (token) {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/profile`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(user => {
-            document.getElementById('username').textContent = user.name;
-            document.getElementById('user-email').textContent = user.email;
-            document.getElementById('user-name').textContent = user.name;
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('로그인 요청이 실패했습니다.');
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    if (loginModal) {
+                        loginModal.style.display = 'none';
+                    }
+                    if (typeof fetchMovies === 'function') {
+                        fetchMovies();
+                    }
+                } else {
+                    alert('로그인 실패');
+                }
+            })
+            .catch(err => {
+                console.error("로그인 요청 중 오류 발생:", err);
+                alert(`로그인에 실패했습니다. 오류: ${err.message}`);
+            });
         });
     }
 
-    // 프로필 모달 열기
-    const profileTab = document.getElementById('profile-tab');
-    profileTab.addEventListener('click', () => {
-        if (token) {
-            document.getElementById('profile-modal').style.display = 'block';
-        } else {
-            document.getElementById('login-modal').style.display = 'block';
-        }
-    });
-
-    // 내 정보 클릭 시 정보 표시
-    document.getElementById('user-info').addEventListener('click', () => {
-        document.getElementById('user-info-section').style.display = 'block';
-        document.getElementById('favorites-section').style.display = 'none';
-    });
-
-    // 찜한 목록 클릭 시 찜한 영화 표시
-    document.getElementById('favorites-btn').addEventListener('click', () => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/movies/favorites`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(movies => {
-            const favoritesGrid = document.getElementById('favorites-grid');
-            favoritesGrid.innerHTML = '';
-            movies.forEach(movie => {
-                const movieItem = document.createElement('div');
-                movieItem.classList.add('movie-item');
-                const img = document.createElement('img');
-                img.src = movie.poster_url;
-                img.alt = movie.title;
-                const title = document.createElement('p');
-                title.textContent = movie.title;
-                movieItem.appendChild(img);
-                movieItem.appendChild(title);
-                favoritesGrid.appendChild(movieItem);
-            });
+    // 로그아웃 후 페이지 리다이렉트
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('token');  // JWT 토큰 삭제
+            localStorage.removeItem('token_expiration');  // 만료 시간 삭제
+            window.location.href = '/login';  // 로그인 페이지로 리다이렉트
         });
-        document.getElementById('user-info-section').style.display = 'none';
-        document.getElementById('favorites-section').style.display = 'block';
-    });
-
-    // 창 외부 클릭 시 모달 닫기
-    window.addEventListener('click', (event) => {
-        const profileModal = document.getElementById('profile-modal');
-        if (event.target === profileModal) {
-            profileModal.style.display = 'none';
-        }
-    });
+    }
 });

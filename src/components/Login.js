@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+import { CognitoUser, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
 import { useNavigate } from 'react-router-dom';
-import { awsConfig } from '../awsConfig';
-import './Login.css'; // Login.js에서 스타일을 불러오기
+import './Login.css';
 
 // Cognito User Pool 설정
 const userPool = new CognitoUserPool({
-  UserPoolId: awsConfig.userPoolId,
-  ClientId: awsConfig.clientId,
+  UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+  ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID,
 });
 
 function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // 로그인 처리 함수
   const handleLogin = () => {
     const authDetails = new AuthenticationDetails({
       Username: email,
@@ -37,8 +36,7 @@ function Login({ setIsAuthenticated }) {
         navigate('/');  // 메인 페이지로 이동
       },
       onFailure: (err) => {
-        console.error('Login failed:', err);
-        alert(`로그인에 실패했습니다. 오류: ${err.message}`);  // 오류 메시지 추가
+        setError(err.message || '로그인에 실패했습니다.');
       },
     });
   };
@@ -47,6 +45,7 @@ function Login({ setIsAuthenticated }) {
     <div className="login-background">
       <div className="login-container">
         <h2>Login</h2>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
         <input
           type="email"
           placeholder="Email"
@@ -60,7 +59,7 @@ function Login({ setIsAuthenticated }) {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button onClick={handleLogin}>Login</button>
-        <button onClick={() => navigate('/signup')}>Sign Up</button>  {/* 회원가입 버튼 */}
+        <button onClick={() => navigate('/signup')}>Sign Up</button> {/* 회원가입 버튼 */}
       </div>
     </div>
   );

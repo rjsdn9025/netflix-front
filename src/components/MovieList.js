@@ -1,24 +1,24 @@
-// MovieList.js (영화 카테고리 섹션)
 import React, { useEffect, useState } from 'react';
+import MovieDetail from './MovieDetail'; // MovieDetail을 모달로 사용
 
 function MovieList() {
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedMovie, setSelectedMovie] = useState(null); // 선택된 영화를 저장
 
   useEffect(() => {
     // 백엔드 API로부터 영화 목록 가져오기
-    fetch(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_PORT}/api/movies`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/movies`)
       .then((response) => response.json())
       .then((data) => setMovies(data))
       .catch((error) => console.error('영화 데이터를 가져오는 중 오류 발생:', error));
   }, []);
 
   const openModal = (movie) => {
-    setSelectedMovie(movie);
+    setSelectedMovie(movie); // 영화 선택 시 모달 열기
   };
 
   const closeModal = () => {
-    setSelectedMovie(null);
+    setSelectedMovie(null); // 모달 닫기
   };
 
   return (
@@ -33,25 +33,8 @@ function MovieList() {
         ))}
       </div>
 
-      {selectedMovie && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>&times;</span>
-            <div className="modal-video">
-              <iframe
-                src={selectedMovie.trailer_url}
-                width="100%"
-                height="315"
-                frameborder="0"
-                allowfullscreen
-              ></iframe>
-            </div>
-            <div className="modal-details">
-              <h2>{selectedMovie.title}</h2>
-              <p>{selectedMovie.description}</p>
-            </div>
-          </div>
-        </div>
+      {selectedMovie && (  // 영화가 선택되었을 때만 모달을 렌더링
+        <MovieDetail movie={selectedMovie} onClose={closeModal} />
       )}
     </section>
   );

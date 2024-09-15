@@ -1,6 +1,6 @@
 /* 배경 이미지 설정 */
 .login-background {
-    background-image: url('https://web-images-kmhyuk1018.s3.ap-northeast-2.amazonaws.com/background.jpg');
+    background-image: url('https://s3-rocket-ott.s3.ap-northeast-2.amazonaws.com/background.jpg');
     background-size: cover;  /* 이미지를 화면 크기에 맞춰 채움 */
     background-position: center center;  /* 이미지 중앙 배치 */
     background-repeat: no-repeat;  /* 이미지 반복 방지 */
