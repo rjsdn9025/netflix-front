@@ -1,0 +1,108 @@
+/* 기존 스타일 유지 */
+body {
+  background-color: #1c1e21;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+body::-webkit-scrollbar {
+  display: none; /* 웹킷 기반 브라우저에서 스크롤바를 숨김 */
+}
+
+main {
+  height: 200vh; /* 컨텐츠 높이를 늘려 위아래 스크롤이 가능하게 */
+}
+
+/* 로고 및 프로필 배너 스타일 */
+header {
+  text-align: center;
+  position: relative;
+}
+
+/* 로고 이미지 크기 조정 */
+.logo img {
+  width: 350px;
+  height: 100px;
+  object-fit: contain; /* 이미지 비율을 유지하면서 지정된 크기에 맞춤 */
+}
+
+.profile {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 18px; /* 로고보다 3단계 작게 */
+}
+
+/* 네비게이션 스타일 */
+.nav-links {
+  margin-top: 10px;
+}
+
+.nav-links ul {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  list-style: none;
+  padding: 0;
+}
+
+.nav-links ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+}
+
+/* 슬라이더 스타일 */
+.slider {
+  width: 100%;
+  height: 65vh; /* 슬라이더의 높이는 고정 */
+  overflow: hidden;
+  position: relative;
+  background-color: black;
+  display: flex; /* 중앙 정렬을 위한 flexbox 추가 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+}
+
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 이미지가 슬라이더 컨테이너를 유지하면서 비율을 유지 */
+}
+
+
+/* 영화 카테고리 섹션 */
+.movie-section {
+  padding: 20px;
+}
+
+.movie-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* 하단 영화 그리드 */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 반응형 그리드 */
+  justify-content: center; /* 중앙 정렬 추가 */
+  align-items: center; /* 중앙 정렬 추가 */
+  gap: 20px;
+}
+
+.movie-item img {
+  width: 450px;  /* 가로 500px 고정 */
+  height: 300px; /* 세로 400px 고정 */
+  border-radius: 10px;
+  transition: transform 0.2s;
+  object-fit: cover; /* 이미지를 포스터 영역에 맞추기 */
+}
+
+.movie-item img:hover {
+  transform: scale(1.05);
+}
+
+.movie-item p {
+  display: none;
+}
