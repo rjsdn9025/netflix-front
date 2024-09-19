@@ -4,13 +4,14 @@
   "private": true,
   "homepage": "http://13.209.50.6",
   "dependencies": {
+    "amazon-cognito-identity-js": "^5.0.3",
+    "aws-sdk": "^2.1030.0",
+    "bootstrap": "^5.2.3",
+    "http-proxy-middleware": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "aws-sdk": "^2.1030.0",
-    "amazon-cognito-identity-js": "^5.0.3",
-    "bootstrap": "^5.2.3",
-    "react-router-dom": "^6.0.0"  
+    "react-router-dom": "^6.0.0",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
