@@ -57,7 +57,7 @@ function App() {
               <ul>
                 <li><Link to="/">Home</Link> |</li>
                 <li><a href="#">search</a> |</li>
-                <li><a href="#">영화</a> |</li>
+                <li><a href="#">movies</a> |</li>
                 <li><a href="#">시리즈</a></li>
               </ul>
             </nav>

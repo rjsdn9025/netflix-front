@@ -51,7 +51,7 @@ jobs:
       - name: Checkout helm repository
         uses: actions/checkout@v2
         with:
-          repository: $GITHUB_USERNAME/k8s-front-repo
+          repository: ${{ secrets.NAME_GITHUB }}/k8s-front-repo
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-front-repo
