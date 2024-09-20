@@ -66,11 +66,10 @@ jobs:
       # 8. Helm values.yaml 파일을 업데이트하는 단계
       - name: Update Helm values.yaml with new image tag
         run: |
-          echo ${{ steps.login-ecr.outputs.registry }}
-          echo ${{ steps.image-info.outputs.ecr_repository }}
-          echo ${{ steps.image-info.outputs.image_tag }}
+          IMAGE_TAG=${{ steps.image-info.outputs.image_tag }}
+          echo "Updating values.yaml with new image tag: $IMAGE_TAG"
           cd k8s-front-repo
-          yq eval '.image.tag = "{{ steps.image-info.outputs.image_tag }}"' -i values.yaml
+          yq eval ".image.tag = \"$IMAGE_TAG\"" -i values.yaml
           cat values.yaml
 
       # 9. 변경된 values.yaml 파일을 커밋하는 단계
