@@ -58,7 +58,7 @@ function App() {
                 <li><Link to="/">Home</Link> |</li>
                 <li><a href="#">Search</a> |</li>
                 <li><a href="#">Moives</a> |</li>
-                <li><a href="#">시리즈</a></li>g
+                <li><a href="#">Series</a></li>g
               </ul>
             </nav>
             <Slider />
