@@ -8,7 +8,7 @@ function MovieDetail({ movie, onClose }) {
 
   useEffect(() => {
     // 찜한 영화 데이터 가져오기
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/favorites`, {
+    fetch("/api/user/favorites", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
