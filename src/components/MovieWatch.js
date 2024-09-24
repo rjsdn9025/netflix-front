@@ -9,7 +9,7 @@ function MovieWatch() {
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 사용
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/movies/${movieId}/watch`)
+    fetch(`/api/movies/${movieId}/watch`)
       .then((response) => response.json())
       .then((data) => setMovie(data))
       .catch((error) => {
