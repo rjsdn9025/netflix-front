@@ -6,6 +6,7 @@ import Signup from './components/Signup';
 import Profile from './components/Profile'; 
 import MovieDetail from './components/MovieDetail';  
 import Slider from './components/Slider';  
+import MovieWatch from './components/MovieWatch'; // 영화 시청 페이지 추가
 import './App.css'; // 메인 스타일 가져오기
 
 function App() {
