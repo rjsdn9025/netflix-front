@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import './MovieDetail.css'; // 영화 상세 스타일을 따로 관리
 
 function MovieDetail({ movie, onClose }) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate(); // navigate 함수 사용
 
   useEffect(() => {
-    // 찜한 상태 확인
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/movies/favorites`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    // 찜한 영화 데이터 가져오기
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/favorites`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Unauthorized');
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((favorites) => {
-        if (Array.isArray(favorites)) {
+        if (favorites) {
           const isFavorited = favorites.some((fav) => fav.id === movie.id);
           setIsFavorite(isFavorited);
         }
@@ -42,7 +41,8 @@ function MovieDetail({ movie, onClose }) {
   };
 
   const handleWatchClick = () => {
-    window.open(`${process.env.REACT_APP_BACKEND_URL}/api/movies/${movie.id}/watch`);
+    // 프론트엔드 경로로 이동 (영화 시청 페이지)
+    navigate(`/movies/${movie.id}/watch`);
   };
 
   return (

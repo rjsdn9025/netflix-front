@@ -1,26 +1,24 @@
-.watch-movie-container {
+/* MovieWatch.css */
+
+/* 페이지 전체를 클릭할 수 있도록 크기 설정 */
+.movie-watch-container {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: black;
+  width: 100vw; /* 전체 화면 너비 */
+  height: 100vh; /* 전체 화면 높이 */
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.8); /* 배경을 살짝 어둡게 처리 */
+  z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
 }
 
-.movie-player {
+/* 비디오 크기를 1600x900으로 고정 */
+.movie-video {
   width: 1600px;
   height: 900px;
+  object-fit: cover; /* 비율을 유지하면서 화면을 꽉 채움 */
+  z-index: 1001; /* 클릭 이벤트에서 배경과 구분되도록 설정 */
 }
 
-.background-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
-  cursor: pointer;
-}
