@@ -11,7 +11,7 @@ jobs:
     steps:
       # 1. 소스 코드를 체크아웃하는 단계
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       # 2. AWS 자격 증명을 설정하는 단계
       - name: Configure AWS credentials
@@ -31,37 +31,42 @@ jobs:
         id: image
         run: |
           VERSION=$(echo ${{ github.sha }} | cut -c1-8)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo VERSION=$VERSION
+          echo "::set-output name=version::$VERSION"
 
       # 5. Docker 이미지를 빌드하고 ECR에 푸시하는 단계
       - name: Build, tag, and push image to Amazon ECR
+        id: image-info
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: netflix-frontend
-          IMAGE_TAG: ${{ env.VERSION }}
+          IMAGE_TAG: ${{ steps.image.outputs.version }}
         run: |
+          echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
+          echo "::set-output name=image_tag::$IMAGE_TAG"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # 6. Helm 리포지토리를 체크아웃하는 단계
       - name: Checkout helm repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           repository: ${{ secrets.NAME_GITHUB }}/k8s-front-repo
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-front-repo
 
-      # 7. yq 설치 단계 (바이너리 설치 방식 사용)
+      # 7. yq 설치 단계
       - name: Setup yq
         run: |
-          sudo wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64 -O /usr/bin/yq
-          sudo chmod +x /usr/bin/yq
+          sudo add-apt-repository ppa:rmescandon/yq
+          sudo apt update
+          sudo apt install yq
 
       # 8. Helm values.yaml 파일을 업데이트하는 단계
       - name: Update Helm values.yaml with new image tag
         run: |
-          IMAGE_TAG=${{ env.VERSION }}
+          IMAGE_TAG=${{ steps.image-info.outputs.image_tag }}
           echo "Updating values.yaml with new image tag: $IMAGE_TAG"
           cd k8s-front-repo
           yq eval ".image.tag = \"$IMAGE_TAG\"" -i values.yaml
@@ -73,5 +78,5 @@ jobs:
           cd k8s-front-repo
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          git commit -am "Update image tag to $IMAGE_TAG"
+          git commit -am "Update image tag"
           git push -u origin main
