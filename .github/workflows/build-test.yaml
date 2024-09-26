@@ -1,82 +1,82 @@
-name: Build Front
+# name: Build Front
 
-on:
-  push:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-      # 1. 소스 코드를 체크아웃하는 단계
-      - name: Checkout source code
-        uses: actions/checkout@v2
+#     steps:
+#       # 1. 소스 코드를 체크아웃하는 단계
+#       - name: Checkout source code
+#         uses: actions/checkout@v2
 
-      # 2. AWS 자격 증명을 설정하는 단계
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+#       # 2. AWS 자격 증명을 설정하는 단계
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ap-northeast-2
 
-      # 3. Amazon ECR에 로그인하는 단계
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+#       # 3. Amazon ECR에 로그인하는 단계
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
 
-      # 4. 이미지 태그를 생성하는 단계 (커밋 SHA를 사용)
-      - name: Get image tag (version)
-        id: image
-        run: |
-          VERSION=$(echo ${{ github.sha }} | cut -c1-8)
-          echo VERSION=$VERSION
-          echo "::set-output name=version::$VERSION"
+#       # 4. 이미지 태그를 생성하는 단계 (커밋 SHA를 사용)
+#       - name: Get image tag (version)
+#         id: image
+#         run: |
+#           VERSION=$(echo ${{ github.sha }} | cut -c1-8)
+#           echo VERSION=$VERSION
+#           echo "::set-output name=version::$VERSION"
 
-      # 5. Docker 이미지를 빌드하고 ECR에 푸시하는 단계
-      - name: Build, tag, and push image to Amazon ECR
-        id: image-info
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: netflix-frontend
-          IMAGE_TAG: ${{ steps.image.outputs.version }}
-        run: |
-          echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
-          echo "::set-output name=image_tag::$IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#       # 5. Docker 이미지를 빌드하고 ECR에 푸시하는 단계
+#       - name: Build, tag, and push image to Amazon ECR
+#         id: image-info
+#         env:
+#           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#           ECR_REPOSITORY: netflix-frontend
+#           IMAGE_TAG: ${{ steps.image.outputs.version }}
+#         run: |
+#           echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
+#           echo "::set-output name=image_tag::$IMAGE_TAG"
+#           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+#           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      # 6. Helm 리포지토리를 체크아웃하는 단계
-      - name: Checkout helm repository
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ secrets.NAME_GITHUB }}/k8s-front-repo
-          ref: main
-          token: ${{ secrets.ACTION_TOKEN }}
-          path: k8s-front-repo
+#       # 6. Helm 리포지토리를 체크아웃하는 단계
+#       - name: Checkout helm repository
+#         uses: actions/checkout@v2
+#         with:
+#           repository: ${{ secrets.NAME_GITHUB }}/k8s-front-repo
+#           ref: main
+#           token: ${{ secrets.ACTION_TOKEN }}
+#           path: k8s-front-repo
 
-      # 7. yq 설치 단계
-      - name: Setup yq
-        run: |
-          sudo add-apt-repository ppa:rmescandon/yq
-          sudo apt update
-          sudo apt install yq
+#       # 7. yq 설치 단계
+#       - name: Setup yq
+#         run: |
+#           sudo add-apt-repository ppa:rmescandon/yq
+#           sudo apt update
+#           sudo apt install yq
 
-      # 8. Helm values.yaml 파일을 업데이트하는 단계
-      - name: Update Helm values.yaml with new image tag
-        run: |
-          IMAGE_TAG=${{ steps.image-info.outputs.image_tag }}
-          echo "Updating values.yaml with new image tag: $IMAGE_TAG"
-          cd k8s-front-repo
-          yq eval ".image.tag = \"$IMAGE_TAG\"" -i values.yaml
-          cat values.yaml
+#       # 8. Helm values.yaml 파일을 업데이트하는 단계
+#       - name: Update Helm values.yaml with new image tag
+#         run: |
+#           IMAGE_TAG=${{ steps.image-info.outputs.image_tag }}
+#           echo "Updating values.yaml with new image tag: $IMAGE_TAG"
+#           cd k8s-front-repo
+#           yq eval ".image.tag = \"$IMAGE_TAG\"" -i values.yaml
+#           cat values.yaml
 
-      # 9. 변경된 values.yaml 파일을 커밋하는 단계
-      - name: Commit updated values.yaml
-        run: |
-          cd k8s-front-repo
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git commit -am "Update image tag"
-          git push -u origin main
+#       # 9. 변경된 values.yaml 파일을 커밋하는 단계
+#       - name: Commit updated values.yaml
+#         run: |
+#           cd k8s-front-repo
+#           git config --global user.email "github-actions@github.com"
+#           git config --global user.name "github-actions"
+#           git commit -am "Update image tag"
+#           git push -u origin main
