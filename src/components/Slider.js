@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 function Slider() {
   const [slideIndex, setSlideIndex] = useState(0);
   const slides = [
-    "https://s3-rocket-ott.s3.ap-northeast-2.amazonaws.com/image/111.jpg",
-    "https://s3-rocket-ott.s3.ap-northeast-2.amazonaws.com/image/222.jpg",
-    "https://s3-rocket-ott.s3.ap-northeast-2.amazonaws.com/image/333.jpg",
-    "https://s3-rocket-ott.s3.ap-northeast-2.amazonaws.com/image/444.jpg"
+    "https://df5vvgenn2hzh.cloudfront.net/image/111.jpg",
+    "https://df5vvgenn2hzh.cloudfront.net/image/222.jpg",
+    "https://df5vvgenn2hzh.cloudfront.net/image/333.jpg",
+    "https://df5vvgenn2hzh.cloudfront.net/image/444.jpg"
   ];
 
   useEffect(() => {
