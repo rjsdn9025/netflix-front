@@ -117,14 +117,14 @@ jobs:
           ECR_REPOSITORY: netflix-frontend
           IMAGE_TAG: ${{ env.VERSION }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
 
       # 6. Trivy 취약점 검사 단계
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         continue-on-error: true  # 보안 검사 실패 시도 계속 진행
         with:
-          image-ref: '${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.VERSION }}'
+          image-ref: '${{ env.ECR_REPOSITORY }}:${{ env.VERSION }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
           exit-code: '1'
