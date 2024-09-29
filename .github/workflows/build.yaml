@@ -70,7 +70,7 @@ jobs:
       # 9. 변경된 values.yaml 파일을 커밋하는 단계
       - name: Commit updated values.yaml
         run: |
-          cd k8s-front-repo
+          cd app-of-apps/frontend
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
           git commit -am "Update image tag to $IMAGE_TAG"
