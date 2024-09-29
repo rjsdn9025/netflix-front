@@ -88,8 +88,9 @@ env:
   ECR_REPOSITORY: netflix-frontend
 
 permissions:
+  actions: read
   contents: read
-  security-events: write  # SARIF 파일 업로드 권한
+  security-events: write
 
 jobs:
   build:
