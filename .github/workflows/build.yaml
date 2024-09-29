@@ -81,6 +81,12 @@ on:
   push:
     branches: [ main ]
 
+env:
+  # AWS Region 설정
+  AWS_REGION: ap-northeast-2
+  # backend ECR Repository 설정
+  ECR_REPOSITORY: netflix-frontend
+
 jobs:
   build:
     runs-on: ubuntu-latest
