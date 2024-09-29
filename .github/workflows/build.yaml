@@ -87,6 +87,10 @@ env:
   # backend ECR Repository 설정
   ECR_REPOSITORY: netflix-frontend
 
+permissions:
+  contents: read
+  security-events: write  # SARIF 파일 업로드 권한
+
 jobs:
   build:
     runs-on: ubuntu-latest
