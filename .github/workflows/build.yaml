@@ -160,7 +160,7 @@ jobs:
 
       # 9. Helm 리포지토리를 체크아웃하는 단계
       - name: Checkout helm repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ secrets.NAME_GITHUB }}/app-of-apps
           ref: main
