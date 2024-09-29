@@ -56,7 +56,7 @@ function App() {
             </div>
             <nav className="nav-links">
               <ul>
-                <li><Link to="/">홈</Link> |</li>
+                <li><Link to="/">HOME</Link> |</li>
                 <li><a href="#">검색</a> |</li>
                 <li><a href="#">영화</a> |</li>
                 <li><a href="#">시리즈</a></li>
