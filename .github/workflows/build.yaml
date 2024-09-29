@@ -73,6 +73,7 @@ jobs:
           ECR_REPOSITORY: netflix-frontend
           IMAGE_TAG: ${{ env.VERSION }}
         run: |
+          docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # 8. Helm 리포지토리를 체크아웃하는 단계
