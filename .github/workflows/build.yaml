@@ -55,7 +55,7 @@ jobs:
 
       # 6. Trivy 취약점 검사 단계 (테이블 형식으로 결과 출력)
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@master
         continue-on-error: true  # 보안 검사 실패 시도 계속 진행
         with:
           image-ref: '${{ env.ECR_REPOSITORY }}:${{ env.VERSION }}'
