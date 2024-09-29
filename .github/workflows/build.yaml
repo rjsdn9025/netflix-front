@@ -1,3 +1,80 @@
+# name: Build Front
+
+# on:
+#   push:
+#     branches: [ main ]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # 1. 소스 코드를 체크아웃하는 단계
+#       - name: Checkout source code
+#         uses: actions/checkout@v3
+
+#       # 2. AWS 자격 증명을 설정하는 단계
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ap-northeast-2
+
+#       # 3. Amazon ECR에 로그인하는 단계
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+#       # 4. 이미지 태그를 생성하는 단계 (커밋 SHA를 사용)
+#       - name: Get image tag (version)
+#         id: image
+#         run: |
+#           VERSION=$(echo ${{ github.sha }} | cut -c1-8)
+#           echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+#       # 5. Docker 이미지를 빌드하고 ECR에 푸시하는 단계
+#       - name: Build, tag, and push image to Amazon ECR
+#         env:
+#           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#           ECR_REPOSITORY: netflix-frontend
+#           IMAGE_TAG: ${{ env.VERSION }}
+#         run: |
+#           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+#           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+#       # 6. Helm 리포지토리를 체크아웃하는 단계
+#       - name: Checkout helm repository
+#         uses: actions/checkout@v3
+#         with:
+#           repository: ${{ secrets.NAME_GITHUB }}/app-of-apps
+#           ref: main
+#           token: ${{ secrets.ACTION_TOKEN }}
+#           path: app-of-apps
+
+#       # 7. yq 설치 단계 (바이너리 설치 방식 사용)
+#       - name: Setup yq
+#         run: |
+#           sudo wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64 -O /usr/bin/yq
+#           sudo chmod +x /usr/bin/yq
+
+#       # 8. Helm values.yaml 파일을 업데이트하는 단계
+#       - name: Update Helm values.yaml with new image tag
+#         run: |
+#           IMAGE_TAG=${{ env.VERSION }}
+#           echo "Updating values.yaml with new image tag: $IMAGE_TAG"
+#           cd app-of-apps/frontend 
+#           yq eval ".image.tag = \"$IMAGE_TAG\"" -i values.yaml
+#           cat values.yaml
+
+#       # 9. 변경된 values.yaml 파일을 커밋하는 단계
+#       - name: Commit updated values.yaml
+#         run: |
+#           cd app-of-apps/frontend
+#           git config --global user.email "github-actions@github.com"
+#           git config --global user.name "github-actions"
+#           git commit -am "Update image tag to $IMAGE_TAG"
+#           git push -u origin main
 name: Build Front
 
 on:
@@ -44,12 +121,12 @@ jobs:
 
       # 6. Trivy 취약점 검사 단계
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@master
         continue-on-error: true  # 보안 검사 실패 시도 계속 진행
         with:
           image-ref: '${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.VERSION }}'
           format: 'sarif'
-          output: './trivy-results.sarif'
+          output: 'trivy-results.sarif'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
@@ -59,7 +136,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ./trivy-results.sarif
+          sarif_file: trivy-results.sarif
 
       # 8. 취약점 검사가 성공한 경우 ECR에 이미지를 푸시하는 단계
       - name: Push image to Amazon ECR if Trivy scan passes
