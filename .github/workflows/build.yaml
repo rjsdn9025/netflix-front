@@ -47,10 +47,10 @@ jobs:
       - name: Checkout helm repository
         uses: actions/checkout@v3
         with:
-          repository: ${{ secrets.NAME_GITHUB }}/k8s-front-repo
+          repository: ${{ secrets.NAME_GITHUB }}/app-of-apps
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
-          path: k8s-front-repo
+          path: app-of-apps
 
       # 7. yq 설치 단계 (바이너리 설치 방식 사용)
       - name: Setup yq
@@ -63,7 +63,7 @@ jobs:
         run: |
           IMAGE_TAG=${{ env.VERSION }}
           echo "Updating values.yaml with new image tag: $IMAGE_TAG"
-          cd k8s-front-repo
+          cd app-of-apps/frontend 
           yq eval ".image.tag = \"$IMAGE_TAG\"" -i values.yaml
           cat values.yaml
 
