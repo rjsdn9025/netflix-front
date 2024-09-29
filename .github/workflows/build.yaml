@@ -49,7 +49,7 @@ jobs:
         with:
           image-ref: '${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.VERSION }}'
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: './trivy-results.sarif'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
@@ -59,7 +59,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: trivy-results.sarif
+          sarif_file: ./trivy-results.sarif
 
       # 8. 취약점 검사가 성공한 경우 ECR에 이미지를 푸시하는 단계
       - name: Push image to Amazon ECR if Trivy scan passes
